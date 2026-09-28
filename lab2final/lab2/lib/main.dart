@@ -16,7 +16,7 @@ void runExercise1() {
   
   int age = 22;
   double height = 1.77;
-  String name = "Hoang Cong Huy";
+  String name = "Dang Huynh Duc";
   bool isStudent = true;
 
   print("Name: $name");
@@ -50,7 +50,7 @@ void runExercise2() {
 
   // 3. Map (Key-Value)
   Map<String, dynamic> student = {
-    "name": "Hoang Cong Huy",
+    "name": "Dang Huynh Duc   ",
     "age": 22,
     "major": "IT"
   };
