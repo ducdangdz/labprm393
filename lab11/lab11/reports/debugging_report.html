@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LAB 11.4 — DevTools Debugging Report (Taskly App)</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #24292e;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      color: #1a237e;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+    }
+    .meta {
+      color: #586069;
+      font-size: 0.95em;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #0d47a1;
+      margin-top: 28px;
+      border-bottom: 1px solid #eaecef;
+      padding-bottom: 6px;
+    }
+    h3 {
+      color: #1565c0;
+      margin-top: 20px;
+    }
+    code {
+      background-color: #f6f8fa;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 0.9em;
+      color: #d73a49;
+    }
+    pre {
+      background-color: #f6f8fa;
+      padding: 14px;
+      border-radius: 6px;
+      overflow-x: auto;
+      border: 1px solid #e1e4e8;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      color: #24292e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #dfe2e5;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f8ff;
+      color: #0366d6;
+    }
+    tr:nth-child(even) {
+      background-color: #fafbfc;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .badge-pass { background-color: #dcffe4; color: #155724; }
+    .screenshot-card {
+      margin: 24px 0;
+      border: 1px solid #d1d5da;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .screenshot-card img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot-caption {
+      padding: 10px 14px;
+      background: #f6f8fa;
+      font-size: 0.9em;
+      color: #444d56;
+      border-top: 1px solid #d1d5da;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>LAB 11.4 — DevTools Debugging Report</h1>
+  <div class="meta">
+    <strong>Module 11:</strong> Flutter Mobile Development &nbsp;|&nbsp; 
+    <strong>Application:</strong> Taskly App &nbsp;|&nbsp; 
+    <strong>Grade Weight:</strong> 30%
+  </div>
+
+  <h2>1. Overview</h2>
+  <p>
+    Flutter DevTools is a suite of performance and inspection tools designed for debugging Flutter applications. This report provides an in-depth analysis of two critical development concerns in the <strong>Taskly</strong> app: layout constraints and runtime frame performance, and details how automated testing and DevTools detect them.
+  </p>
+
+  <h2>2. Potential Layout Issue: Unbounded Horizontal Flex Overflow</h2>
+  <h3>Problem Description</h3>
+  <p>
+    In the Taskly application, the task input bar contains a <code>TextField</code> and an <code>ElevatedButton</code> arranged inside a horizontal <code>Row</code>. By default, a <code>Row</code> provides unconstrained horizontal width (<code>double.infinity</code>) to its children. If a <code>TextField</code> is placed directly inside a <code>Row</code> without wrapping it in an <code>Expanded</code> or <code>Flexible</code> widget, Flutter fails to compute a finite width, triggering the runtime exception:
+  </p>
+  <pre><code>A RenderFlex overflowed by Infinity pixels on the right.
+The offending widget was: TextField</code></pre>
+  <p>
+    Similarly, long task titles inside a custom <code>Row</code> without wrapping or truncation overflow the viewport boundaries, creating visual yellow-and-black hazard bars.
+  </p>
+
+  <h3>How Flutter DevTools Detects the Issue</h3>
+  <ul>
+    <li><strong>Layout Explorer:</strong> Shows parent-child constraint negotiations visually. The offending flex container is highlighted in bright red with explicit pixel overflow measurements.</li>
+    <li><strong>Inspector Tree:</strong> Flags the problematic <code>RenderFlex</code> and provides one-click action buttons to adjust flex factor or wrap with <code>Expanded</code>.</li>
+    <li><strong>Show Guidelines:</strong> Overlays rendering boundaries and alignment guidelines on screen, revealing misaligned borders immediately.</li>
+  </ul>
+
+  <h3>DevTools Widget Inspector Screenshot</h3>
+  <div class="screenshot-card">
+    <img src="../screenshots/widget_inspector.png" alt="DevTools Widget Inspector">
+    <div class="screenshot-caption"><strong>Figure 1:</strong> Flutter DevTools Widget Inspector showing the complete TasklyApp widget tree, ListView layout properties, and active constraints.</div>
+  </div>
+
+  <h2>3. Potential Performance Issue: Unnecessary Widget Rebuilds & Frame Jank</h2>
+  <h3>Problem Description</h3>
+  <p>
+    Whenever a user types in the task text field or toggles a task's checkbox, calling <code>setState()</code> triggers a re-execution of the enclosing widget's <code>build()</code> method:
+  </p>
+  <ul>
+    <li><strong>Non-virtualized List Rendering:</strong> If task lists are constructed with <code>ListView(children: ...)</code> or <code>Column</code>, every task tile in the collection is instantiated and held in memory simultaneously, regardless of whether it is visible in the viewport. When tasks increase to 50+ items, scrolling stutters and drops below 60 frames per second.</li>
+    <li><strong>Missing <code>const</code> Modifiers:</strong> Omitting <code>const</code> on static widgets (e.g., <code>const Text('No tasks yet. Add one!')</code>, button icons) forces Flutter to rebuild the entire subtree rather than reusing existing element references.</li>
+  </ul>
+
+  <h3>How Flutter DevTools Detects the Issue</h3>
+  <ul>
+    <li><strong>Frames Timeline:</strong> Each frame is graphed against the <strong>16.6ms threshold</strong> (target for 60 FPS). Jank frames exceeding 16.6ms are prominently colored in Red.</li>
+    <li><strong>CPU Flame Chart:</strong> Breaks down execution into UI Thread (building & layout) and Raster Thread (GPU composition), isolating slow method calls like heavy JSON decoding or excessive widget instantiations.</li>
+    <li><strong>Track Widget Builds:</strong> Shows the exact number of times each widget rebuilt during a user interaction session.</li>
+  </ul>
+
+  <h3>DevTools Performance Timeline Screenshot</h3>
+  <div class="screenshot-card">
+    <img src="../screenshots/performance_timeline.png" alt="DevTools Performance Timeline">
+    <div class="screenshot-caption"><strong>Figure 2:</strong> Flutter DevTools Performance timeline displaying smooth 60 FPS frames (&lt;16.6ms), CPU flame chart for Frame #22, and widget rebuild metrics.</div>
+  </div>
+
+  <h2>4. Summary of Detection Synergy</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Diagnostic Dimension</th>
+        <th>Automated Tests (<code>flutter test</code>)</th>
+        <th>Flutter DevTools</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Layout Integrity</strong></td>
+        <td>Catches overflow exceptions instantly via <code>tester.takeException()</code> during widget pumps.</td>
+        <td>Visually inspects flex constraints, box paddings, and alignment rules live.</td>
+      </tr>
+      <tr>
+        <td><strong>Performance / Rebuilds</strong></td>
+        <td>Asserts state transition timing and memory garbage collection boundaries.</td>
+        <td>Monitors UI/Raster thread timeline, frame drops, and CPU flame charts in real time.</td>
+      </tr>
+      <tr>
+        <td><strong>Development Phase</strong></td>
+        <td>Automated CI/CD pre-commit gatekeeper.</td>
+        <td>Interactive runtime exploratory profiling and tuning.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>

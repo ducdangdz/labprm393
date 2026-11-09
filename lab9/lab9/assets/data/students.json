@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Nguyen Van An",
+    "email": "annv@fpt.edu.vn",
+    "major": "Software Engineering",
+    "gpa": 3.85,
+    "phone": "0912345678"
+  },
+  {
+    "id": 2,
+    "name": "Tran Thi Bich",
+    "email": "bichtt@fpt.edu.vn",
+    "major": "Information Assurance",
+    "gpa": 3.65,
+    "phone": "0923456789"
+  },
+  {
+    "id": 3,
+    "name": "Le Hoang Cuong",
+    "email": "cuonglh@fpt.edu.vn",
+    "major": "Artificial Intelligence",
+    "gpa": 3.92,
+    "phone": "0934567890"
+  },
+  {
+    "id": 4,
+    "name": "Pham Minh Duc",
+    "email": "ducpm@fpt.edu.vn",
+    "major": "Mobile Programming",
+    "gpa": 3.50,
+    "phone": "0945678901"
+  },
+  {
+    "id": 5,
+    "name": "Hoang Ngoc Diep",
+    "email": "diephn@fpt.edu.vn",
+    "major": "Graphic Design",
+    "gpa": 3.78,
+    "phone": "0956789012"
+  },
+  {
+    "id": 6,
+    "name": "Vu Tuan Kiet",
+    "email": "kietvt@fpt.edu.vn",
+    "major": "Data Science",
+    "gpa": 3.70,
+    "phone": "0967890123"
+  }
+]

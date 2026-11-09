@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LAB 11.5 — Test Suite Summary Document (Taskly App)</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #24292e;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      color: #1a237e;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+    }
+    .meta {
+      color: #586069;
+      font-size: 0.95em;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #0d47a1;
+      margin-top: 28px;
+      border-bottom: 1px solid #eaecef;
+      padding-bottom: 6px;
+    }
+    h3 {
+      color: #1565c0;
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #dfe2e5;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f8ff;
+      color: #0366d6;
+    }
+    tr:nth-child(even) {
+      background-color: #fafbfc;
+    }
+    code {
+      background-color: #f6f8fa;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 0.9em;
+      color: #d73a49;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .badge-pass { background-color: #dcffe4; color: #155724; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .stat-box {
+      background: #f6f8fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-box .number {
+      font-size: 2em;
+      font-weight: 700;
+      color: #1a237e;
+    }
+    .stat-box .label {
+      font-size: 0.9em;
+      color: #586069;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>LAB 11.5 — Test Suite Summary Document</h1>
+  <div class="meta">
+    <strong>Module 11:</strong> Flutter Mobile Development &nbsp;|&nbsp; 
+    <strong>Project:</strong> Taskly App &nbsp;|&nbsp; 
+    <strong>Consolidation Status:</strong> 100% Passed
+  </div>
+
+  <h2>1. Executive Summary</h2>
+  <p>
+    This document summarizes the results of the complete automated test suite engineered for the <strong>Taskly</strong> Flutter application. The test suite spans pure Dart <strong>Unit Tests</strong>, UI <strong>Widget Tests</strong>, route <strong>Navigation Tests</strong>, and end-to-end <strong>Integration Tests</strong>.
+  </p>
+
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="number">13</div>
+      <div class="label">Total Test Executions</div>
+    </div>
+    <div class="stat-box">
+      <div class="number">5</div>
+      <div class="label">Test Suites</div>
+    </div>
+    <div class="stat-box">
+      <div class="number">100%</div>
+      <div class="label">Pass Rate</div>
+    </div>
+    <div class="stat-box">
+      <div class="number">0</div>
+      <div class="label">Failures / Errors</div>
+    </div>
+  </div>
+
+  <h2>2. Test Matrix and Verified Behaviors</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Test Suite</th>
+        <th>Test Category</th>
+        <th>Test Case Description</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="3"><code>task_model_test.dart</code></td>
+        <td rowspan="3">Unit Test</td>
+        <td>Default completed value is false</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>toggle() switches completed status true &harr; false</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>copyWith() creates updated instance without mutating original</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td rowspan="4"><code>task_repository_test.dart</code></td>
+        <td rowspan="4">Unit Test</td>
+        <td>addTask() adds task to repository and updates count</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>deleteTask() removes target task by ID</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>updateTask() replaces task matching unique ID</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>clear() purges all tasks from collection</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td rowspan="3"><code>task_list_widget_test.dart</code></td>
+        <td rowspan="3">Widget Test</td>
+        <td>Empty State: displays "No tasks yet. Add one!" when empty</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>Add Task: enter text &rarr; tap add &rarr; verify UI updates</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>Multiple Tasks: add two tasks &rarr; verify both visible</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td><code>task_navigation_test.dart</code></td>
+        <td>Navigation Test</td>
+        <td>Tap seeded task &rarr; navigate to TaskDetailScreen with expected title and TextField key</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td rowspan="2"><code>task_integration_test.dart</code></td>
+        <td rowspan="2">Integration Test</td>
+        <td>Full flow: Add "Original title" &rarr; Open detail &rarr; Edit to "Updated title" &rarr; Save &rarr; Verify in list (widget directory)</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+      <tr>
+        <td>Full flow: Complete lifecycle test execution (integration directory)</td>
+        <td><span class="badge badge-pass">PASSED</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Test Architecture & Design Principles</h2>
+  <ul>
+    <li><strong>AAA Pattern (Arrange &rarr; Act &rarr; Assert):</strong> Every test file clearly segregates the setup state, action execution, and assertion validation.</li>
+    <li><strong>Explicit Key Finding:</strong> Widgets are targeted with robust <code>Key</code> identifiers (e.g. <code>Key('taskInputField')</code>, <code>Key('addTaskButton')</code>, <code>Key('detailTitleField')</code>, <code>Key('saveTaskButton')</code>) to prevent brittle UI tests.</li>
+    <li><strong>Asynchronous Pump Control:</strong> Uses <code>pump()</code> for immediate frame updates and <code>pumpAndSettle()</code> for full routing and transition completion.</li>
+  </ul>
+
+  <h2>4. Known Limitations & Future Roadmap</h2>
+  <ol>
+    <li><strong>Persistence:</strong> In-memory repository clears on app restart; future versions will integrate SQLite or Hive.</li>
+    <li><strong>Offline Sync:</strong> No remote sync mechanism is currently implemented in this module.</li>
+    <li><strong>Soft Deletes:</strong> Tasks are hard-deleted immediately; future versions can include an undo snackbar.</li>
+  </ol>
+
+</body>
+</html>
